@@ -1,0 +1,81 @@
+﻿@page "/programme"
+@page "/programme/{id:int}"
+@using WebApp.Data.Models
+@using WebApp.Services
+@inject ProgrammeService programmeService
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Programme: @Title</h3>
+
+<EditForm FormName="Record" Model="@record">
+    <div>
+        <div class="mb-3">
+            <label for="CodeInput" class="form-label">Code</label>
+            <div class="col-md-4">
+                <InputText id="CodeInput" class="form-control" @bind-Value="record.Code" disabled />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="TitleInput" class="form-label">Title</label>
+            <div class="col-md-4">
+                <InputText id="TitleInput" class="form-control" @bind-Value="record.Title" disabled />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="CreditInput" class="form-label">Credits</label>
+            <div class="col-md-4">
+                <InputNumber id="CreditInput" class="form-control" @bind-Value="record.Credits" disabled />
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-light" @onclick="HandleDirectAdd">Add</button>
+            <button class="btn btn-light" @onclick="HandleDirectEdit">Edit</button>
+            <button class="btn btn-light" @onclick="HandleCancel">Cancel</button>
+        </div>
+    </div>
+</EditForm> 
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    protected string Title;
+
+    [SupplyParameterFromForm]
+    Programme record { get; set; } = new Programme();
+
+    private string? currentUrl;
+
+    protected async override Task OnInitializedAsync()
+    {
+        record = new Programme();
+
+        if(Id != 0)
+        {
+            Title = "View";
+            record = programmeService.GetById(Id);
+
+        }
+        else
+        {
+            HandleDirectAdd();
+        }
+    }
+
+    public void HandleDirectAdd()
+    {
+        NavigationManager.NavigateTo("/programme/add");
+
+    }
+
+    public void HandleDirectEdit()
+    {
+        NavigationManager.NavigateTo("/programme/edit/" + Id);
+    }
+
+    public void HandleCancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+
