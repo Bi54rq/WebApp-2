@@ -44,6 +44,7 @@ namespace WebApp
 
             builder.Services.AddScoped<ModuleService>();
             builder.Services.AddScoped<ProgrammeService>();
+            builder.Services.AddScoped<StaffService>();
 
             builder.Services.AddHttpClient();
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options => options.UseSqlServer(connectionString));

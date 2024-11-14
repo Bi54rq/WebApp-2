@@ -1,12 +1,13 @@
-﻿@page "/programme/{id:int}"
+﻿@page "/staff/{id:int}"
 @rendermode InteractiveServer
 @using WebApp.Data.Models
 @using WebApp.Services
+@inject StaffService staffService
 @inject ProgrammeService programmeService
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<h3>Programme: @Title</h3>
+<h3>StaffDetails: @Title</h3>
 
 <EditForm FormName="Record" Model="@record">
     <div>
@@ -26,6 +27,7 @@
             <label for="CreditInput" class="form-label">Credits</label>
             <div class="col-md-4">
                 <InputNumber id="CreditInput" class="form-control" @bind-Value="record.Credits" disabled />
+                
             </div>
         </div>
         <div class="form-group">
@@ -34,9 +36,34 @@
             <button class="btn btn-light" @onclick="HandleCancel">Cancel</button>
         </div>
     </div>
-</EditForm> 
+</EditForm>
+<h3>Programmes Leaderships</h3>
 
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Credits</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var programme in programmes)
+        {
+            <tr>
+                <td>@programme.Id</td>
+                <td>@programme.Code</td>
+                <td>@programme.Title</td>
+                <td>@programme.Credits</td>
+                <td><button class="btn btn-primary" @onclick="() => GoToDetailsPage(programme.Id)">View</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
 @code {
+
     [Parameter]
     public int Id { get; set; }
     protected string Title;
@@ -50,10 +77,11 @@
     {
         record = new Programme();
 
-        if(Id != 0)
+        if (Id != 0)
         {
             Title = "View";
-            record = programmeService.GetById(Id);
+            record = staffService.GetById(Id);
+            ApplyFilter();
 
         }
         else
@@ -76,6 +104,27 @@
     public void HandleCancel()
     {
         NavigationManager.NavigateTo("/");
+    }
+    // -------------Program List code---------------//
+
+    List<Programme>? programmes = new();
+
+    public string searchText;
+    
+    void ApplyFilter()
+    {
+        if (string.IsNullOrEmpty(searchText))
+        {
+            programmes = programmeService.GetList();
+        }
+        else
+        {
+            programmes = programmeService.GetFilteredList(searchText);
+        }
+    }
+    void GoToDetailsPage(int id)
+    {
+        NavigationManager.NavigateTo("/programme/" + id);
     }
 }
 

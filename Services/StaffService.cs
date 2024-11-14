@@ -2,13 +2,15 @@
 using WebApp.Data;
 using WebApp.Data.Models;
 
+
+
 namespace WebApp.Services
 {
-    public class ProgrammeService
+    public class StaffService
     {
         IDbContextFactory<ApplicationDbContext> contextFactory;
 
-        public ProgrammeService(IDbContextFactory<ApplicationDbContext> contextFactory)
+        public StaffService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
             this.contextFactory = contextFactory;
         }
@@ -37,7 +39,7 @@ namespace WebApp.Services
 
         public Programme GetByCode(string code)
         {
-            using(var context = contextFactory.CreateDbContext())
+            using (var context = contextFactory.CreateDbContext())
             {
                 var record = context.Programmes.SingleOrDefault(m => m.Code == code);
                 return record;
@@ -49,7 +51,7 @@ namespace WebApp.Services
             using (var context = contextFactory.CreateDbContext())
             {
                 var records = context.Programmes.ToList();
-                return records; 
+                return records;
             }
         }
 
@@ -65,21 +67,10 @@ namespace WebApp.Services
                 return records;
             }
         }
-
-        public List<Programme>GetListByProgrammeLeaderId(int programmeLeaderId)
-        {
-            using (var context = contextFactory.CreateDbContext())
-            {
-                var records = context.Programmes.Where(
-                     r => r.ProgrammeLeaderId.Equals(programmeLeaderId)
-                    ).ToList();
-                return records;
-            }
-        }
         public void Update(int id, string code, string title, int credits)
         {
             var record = GetById(id);
-            if(record == null)
+            if (record == null)
             {
                 throw new Exception("Record does not exist. Nothing to Update");
             }

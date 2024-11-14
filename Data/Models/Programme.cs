@@ -11,5 +11,7 @@ namespace WebApp.Data.Models
         public string Title { get; set; }
         public int Credits { get; set; }
         public DateTime Created { get; set; }
+        public int? ProgrammeLeaderId { get; set; }
+        public Staff? ProgrammeLeader { get; set; }
     }
 }

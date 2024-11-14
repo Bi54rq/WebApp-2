@@ -8,5 +8,6 @@ namespace WebApp.Data
     {
         public DbSet<Module> Modules { get; set; }
         public DbSet<Programme> Programmes { get; set; }
+        public DbSet<Staff> Staffing { get; set; }
     }
 }
